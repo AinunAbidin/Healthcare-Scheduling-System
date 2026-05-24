@@ -1,0 +1,2316 @@
+{
+  "info": {
+    "_postman_id": "a37c69c3-22f5-49c4-b45a-643a39b793b6",
+    "name": "Healthcare Scheduling System - GraphQL",
+    "description": "Manual tester mode: fill required values in Collection Variables inside Postman. No environment input variables required.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "26140875"
+  },
+  "item": [
+    {
+      "name": "Auth Service",
+      "item": [
+        {
+          "name": "01 - Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Register returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Register has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation Register($input: RegisterInput!) {\\n  register(input: $input) {\\n    id\\n    email\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"email\": \"haikal.ainun@gmail.com\",\n      \"password\": \"Strongpassword\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{auth_base_url}}",
+              "host": [
+                "{{auth_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "01 - Register",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"mutation Register($input: RegisterInput!) {\\n  register(input: $input) {\\n    id\\n    email\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"email\": \"haikal.ainun@gmail.com\",\n      \"password\": \"Strongpassword\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{auth_base_url}}",
+                  "host": [
+                    "{{auth_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "179"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"b3-1UAb0yiiw1dMto9QFSqMBC+YfpE\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 02:24:03 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"register\": {\n            \"id\": \"840f4baf-4911-480a-bf57-87bcc5d33895\",\n            \"email\": \"haikal.ainun@gmail.com\",\n            \"createdAt\": \"2026-05-24T02:24:03.141Z\",\n            \"updatedAt\": \"2026-05-24T02:24:03.141Z\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "02 - Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Login returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Login has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });",
+                  "pm.test(\"Login returns access token\", function () { pm.expect(json.data.login.accessToken).to.be.a(\"string\").and.not.empty; });",
+                  "if (json.data && json.data.login) {",
+                  "  pm.collectionVariables.set(\"access_token\", json.data.login.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation Login($input: LoginInput!) {\\n  login(input: $input) {\\n    accessToken\\n    tokenType\\n    expiresIn\\n    user {\\n      id\\n      email\\n    }\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"email\": \"haikal.ainun@gmail.com\",\n      \"password\": \"Strongpassword\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{auth_base_url}}",
+              "host": [
+                "{{auth_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "02 - Login",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"mutation Login($input: LoginInput!) {\\n  login(input: $input) {\\n    accessToken\\n    tokenType\\n    expiresIn\\n    user {\\n      id\\n      email\\n    }\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"email\": \"haikal.ainun@gmail.com\",\n      \"password\": \"Strongpassword\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{auth_base_url}}",
+                  "host": [
+                    "{{auth_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "394"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"18a-mdHRCNpJUqLDjaY95SnstGIk0vg\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 02:24:49 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"login\": {\n            \"accessToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI4NDBmNGJhZi00OTExLTQ4MGEtYmY1Ny04N2JjYzVkMzM4OTUiLCJlbWFpbCI6ImhhaWthbC5haW51bkBnbWFpbC5jb20iLCJpYXQiOjE3Nzk1ODk0ODksImV4cCI6MTc3OTU5MzA4OX0.HhXeSBnJC70VDNWotahzlcQgUkV0DQjOPP-cd3_QWdo\",\n            \"tokenType\": \"Bearer\",\n            \"expiresIn\": \"1h\",\n            \"user\": {\n                \"id\": \"840f4baf-4911-480a-bf57-87bcc5d33895\",\n                \"email\": \"haikal.ainun@gmail.com\"\n            }\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "03 - Validate Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Validate token returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Validate token has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });",
+                  "pm.test(\"Validate token returns user\", function () {",
+                  "  pm.expect(json.data.validateToken.id).to.be.a(\"string\").and.not.empty;",
+                  "  pm.expect(json.data.validateToken.email).to.be.a(\"string\").and.not.empty;",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query ValidateToken($token: String!) {\\n  validateToken(token: $token) {\\n    id\\n    email\\n  }\\n}\",\n  \"variables\": {\n    \"token\": \"{{access_token}}\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{auth_base_url}}",
+              "host": [
+                "{{auth_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "03 - Validate Token",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"query ValidateToken($token: String!) {\\n  validateToken(token: $token) {\\n    id\\n    email\\n  }\\n}\",\n  \"variables\": {\n    \"token\": \"{{access_token}}\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{auth_base_url}}",
+                  "host": [
+                    "{{auth_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "106"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"6a-/uiZgRNMmxQ9CkW8IuJGWxjfP9Y\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 02:25:31 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"validateToken\": {\n            \"id\": \"840f4baf-4911-480a-bf57-87bcc5d33895\",\n            \"email\": \"haikal.ainun@gmail.com\"\n        }\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Schedule Service - Customer",
+      "item": [
+        {
+          "name": "01 - Create Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Create customer returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Create customer has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });",
+                  "if (json.data && json.data.createCustomer) {",
+                  "  pm.collectionVariables.set(\"customer_id\", json.data.createCustomer.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation CreateCustomer($input: CreateCustomerInput!) {\\n  createCustomer(input: $input) {\\n    id\\n    name\\n    email\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"name\": \"cust 2\",\n      \"email\": \"ikhlanhaikal@gmail.com\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}",
+              "host": [
+                "{{schedule_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "01 - Create Customer",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"mutation CreateCustomer($input: CreateCustomerInput!) {\\n  createCustomer(input: $input) {\\n    id\\n    name\\n    email\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"name\": \"cust 1\",\n      \"email\": \"ainun.ilabaca@gmail.com\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "202"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"ca-WrHqh41dTJDJHqpP4vynckrDL20\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 02:26:18 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"createCustomer\": {\n            \"id\": \"e1487351-559d-4c80-a0d1-aeb196f3c114\",\n            \"name\": \"cust 1\",\n            \"email\": \"ainun.ilabaca@gmail.com\",\n            \"createdAt\": \"2026-05-24T02:26:18.293Z\",\n            \"updatedAt\": \"2026-05-24T02:26:18.293Z\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "02 - Update Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Update customer returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Update customer has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation UpdateCustomer($input: UpdateCustomerInput!) {\\n  updateCustomer(input: $input) {\\n    id\\n    name\\n    email\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"e1487351-559d-4c80-a0d1-aeb196f3c114\",\n      \"name\": \"cust_update\"\n    //   \"email\": \"{{customer_email_updated}}\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}",
+              "host": [
+                "{{schedule_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "02 - Update Customer",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"mutation UpdateCustomer($input: UpdateCustomerInput!) {\\n  updateCustomer(input: $input) {\\n    id\\n    name\\n    email\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"e1487351-559d-4c80-a0d1-aeb196f3c114\",\n      \"name\": \"cust_update\"\n    //   \"email\": \"{{customer_email_updated}}\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "168"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"a8-2NqqDtSrDtE8m/8A/R4zSwRshF0\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 02:28:10 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"updateCustomer\": {\n            \"id\": \"e1487351-559d-4c80-a0d1-aeb196f3c114\",\n            \"name\": \"cust_update\",\n            \"email\": \"ainun.ilabaca@gmail.com\",\n            \"updatedAt\": \"2026-05-24T02:28:10.320Z\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "03 - List Customers (pagination)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"List customers returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"List customers has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"query\": \"query Customers($input: CustomerPaginationInput) {\\n  customers(input: $input) {\\n    items {\\n      id\\n      name\\n      email\\n      createdAt\\n      updatedAt\\n    }\\n    total\\n    skip\\n    take\\n  }\\n}\",\n    \"variables\": {\n        \"input\": {\n            \"skip\": 0,\n            \"take\": 10\n        }\n    }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}",
+              "host": [
+                "{{schedule_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "03 - List Customers (pagination)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"query Customers($input: CustomerPaginationInput) {\\n  customers(input: $input) {\\n    items {\\n      id\\n      name\\n      email\\n      createdAt\\n      updatedAt\\n    }\\n    total\\n    skip\\n    take\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"skip\": 0,\n      \"take\": 10\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "238"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"ee-orF8CrKblkPmpCUDzziUCUIW7ok\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 02:27:27 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"customers\": {\n            \"items\": [\n                {\n                    \"id\": \"e1487351-559d-4c80-a0d1-aeb196f3c114\",\n                    \"name\": \"cust 1\",\n                    \"email\": \"ainun.ilabaca@gmail.com\",\n                    \"createdAt\": \"2026-05-24T02:26:18.293Z\",\n                    \"updatedAt\": \"2026-05-24T02:26:18.293Z\"\n                }\n            ],\n            \"total\": 1,\n            \"skip\": 0,\n            \"take\": 10\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "04 - Get Customer by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Get customer returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Get customer has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query Customer($input: CustomerIdInput!) {\\n  customer(input: $input) {\\n    id\\n    name\\n    email\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"e1487351-559d-4c80-a0d1-aeb196f3c114\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}",
+              "host": [
+                "{{schedule_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "04 - Get Customer by ID",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"query Customer($input: CustomerIdInput!) {\\n  customer(input: $input) {\\n    id\\n    name\\n    email\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"e1487351-559d-4c80-a0d1-aeb196f3c114\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "201"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"c9-GzFUBtyC36Tqz7i1NA4pbbPM4to\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 02:28:49 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"customer\": {\n            \"id\": \"e1487351-559d-4c80-a0d1-aeb196f3c114\",\n            \"name\": \"cust_update\",\n            \"email\": \"ainun.ilabaca@gmail.com\",\n            \"createdAt\": \"2026-05-24T02:26:18.293Z\",\n            \"updatedAt\": \"2026-05-24T02:28:10.320Z\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "05 - Delete Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const status = pm.response.code;",
+                  "pm.test(\"Delete customer request sent\", function () { pm.expect([200, 400, 404]).to.include(status); });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation DeleteCustomer($input: CustomerIdInput!) {\\n  deleteCustomer(input: $input) {\\n    id\\n    name\\n    email\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"e1487351-559d-4c80-a0d1-aeb196f3c114\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}",
+              "host": [
+                "{{schedule_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "05 - Delete Customer",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"mutation DeleteCustomer($input: CustomerIdInput!) {\\n  deleteCustomer(input: $input) {\\n    id\\n    name\\n    email\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"e1487351-559d-4c80-a0d1-aeb196f3c114\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "207"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"cf-1O1EhR33e1Z3LnsNWCRf7J/lkEw\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 02:29:20 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"deleteCustomer\": {\n            \"id\": \"e1487351-559d-4c80-a0d1-aeb196f3c114\",\n            \"name\": \"cust_update\",\n            \"email\": \"ainun.ilabaca@gmail.com\",\n            \"createdAt\": \"2026-05-24T02:26:18.293Z\",\n            \"updatedAt\": \"2026-05-24T02:28:10.320Z\"\n        }\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Schedule Service - Doctor",
+      "item": [
+        {
+          "name": "01 - Create Doctor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Create doctor returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Create doctor has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });",
+                  "if (json.data && json.data.createDoctor) {",
+                  "  pm.collectionVariables.set(\"doctor_id\", json.data.createDoctor.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation CreateDoctor($input: CreateDoctorInput!) {\\n  createDoctor(input: $input) {\\n    id\\n    name\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"name\": \"Dr. Sarah Smith\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}",
+              "host": [
+                "{{schedule_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "01 - Create Doctor",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"mutation CreateDoctor($input: CreateDoctorInput!) {\\n  createDoctor(input: $input) {\\n    id\\n    name\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"name\": \"Dr. Sarah Smith\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "175"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"af-Ww44MYzZzyuWyOD8A0FyVm9npqE\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 02:32:24 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"createDoctor\": {\n            \"id\": \"83a1ebfd-9e8d-419f-9688-4d0295777443\",\n            \"name\": \"Dr. Sarah Smith\",\n            \"createdAt\": \"2026-05-24T02:32:24.716Z\",\n            \"updatedAt\": \"2026-05-24T02:32:24.716Z\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "02 - Update Doctor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Update doctor returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Update doctor has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation UpdateDoctor($input: UpdateDoctorInput!) {\\n  updateDoctor(input: $input) {\\n    id\\n    name\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"83a1ebfd-9e8d-419f-9688-4d0295777443\",\n      \"name\": \"Dr. Sarah Updated\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}",
+              "host": [
+                "{{schedule_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "02 - Update Doctor",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"mutation UpdateDoctor($input: UpdateDoctorInput!) {\\n  updateDoctor(input: $input) {\\n    id\\n    name\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"83a1ebfd-9e8d-419f-9688-4d0295777443\",\n      \"name\": \"Dr. Sarah Updated\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "138"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"8a-Yu9HCuKXBs4+B5Ztcek/qbHy2b8\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 02:32:55 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"updateDoctor\": {\n            \"id\": \"83a1ebfd-9e8d-419f-9688-4d0295777443\",\n            \"name\": \"Dr. Sarah Updated\",\n            \"updatedAt\": \"2026-05-24T02:32:55.499Z\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "03 - List Doctors (pagination)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"List doctors returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"List doctors has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query Doctors($input: DoctorPaginationInput) {\\n  doctors(input: $input) {\\n    items {\\n      id\\n      name\\n      createdAt\\n      updatedAt\\n    }\\n    total\\n    skip\\n    take\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"skip\": 0,\n      \"take\": 10\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}",
+              "host": [
+                "{{schedule_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "03 - List Doctors (pagination)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"query Doctors($input: DoctorPaginationInput) {\\n  doctors(input: $input) {\\n    items {\\n      id\\n      name\\n      createdAt\\n      updatedAt\\n    }\\n    total\\n    skip\\n    take\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"skip\": 0,\n      \"take\": 10\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "213"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"d5-xQGg7jhPjL4TpjOVqw43gJrKaJM\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 02:33:07 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"doctors\": {\n            \"items\": [\n                {\n                    \"id\": \"83a1ebfd-9e8d-419f-9688-4d0295777443\",\n                    \"name\": \"Dr. Sarah Updated\",\n                    \"createdAt\": \"2026-05-24T02:32:24.716Z\",\n                    \"updatedAt\": \"2026-05-24T02:32:55.499Z\"\n                }\n            ],\n            \"total\": 1,\n            \"skip\": 0,\n            \"take\": 10\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "04 - Get Doctor by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Get doctor returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Get doctor has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query Doctor($input: DoctorIdInput!) {\\n  doctor(input: $input) {\\n    id\\n    name\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"{{doctor_id}}\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}",
+              "host": [
+                "{{schedule_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "04 - Get Doctor by ID",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"query Doctor($input: DoctorIdInput!) {\\n  doctor(input: $input) {\\n    id\\n    name\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"83a1ebfd-9e8d-419f-9688-4d0295777443\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "171"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"ab-JJIgI1wnTo6ffSdp1baI2CL2rqA\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 02:33:14 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"doctor\": {\n            \"id\": \"83a1ebfd-9e8d-419f-9688-4d0295777443\",\n            \"name\": \"Dr. Sarah Updated\",\n            \"createdAt\": \"2026-05-24T02:32:24.716Z\",\n            \"updatedAt\": \"2026-05-24T02:32:55.499Z\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "05 - Delete Doctor",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const status = pm.response.code;",
+                  "pm.test(\"Delete doctor request sent\", function () { pm.expect([200, 400, 404]).to.include(status); });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation DeleteDoctor($input: DoctorIdInput!) {\\n  deleteDoctor(input: $input) {\\n    id\\n    name\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"83a1ebfd-9e8d-419f-9688-4d0295777443\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}",
+              "host": [
+                "{{schedule_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "05 - Delete Doctor",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"mutation DeleteDoctor($input: DoctorIdInput!) {\\n  deleteDoctor(input: $input) {\\n    id\\n    name\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"83a1ebfd-9e8d-419f-9688-4d0295777443\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "177"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"b1-DBp2TQK65u8aW1PVxVaT/RrZ+fU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 02:34:01 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"deleteDoctor\": {\n            \"id\": \"83a1ebfd-9e8d-419f-9688-4d0295777443\",\n            \"name\": \"Dr. Sarah Updated\",\n            \"createdAt\": \"2026-05-24T02:32:24.716Z\",\n            \"updatedAt\": \"2026-05-24T02:32:55.499Z\"\n        }\n    }\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Schedule Service - Schedule",
+      "item": [
+        {
+          "name": "01 - Create Schedule",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Create schedule returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Create schedule has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });",
+                  "if (json.data && json.data.createSchedule) {",
+                  "  pm.collectionVariables.set(\"schedule_id\", json.data.createSchedule.id);",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation CreateSchedule($input: CreateScheduleInput!) {\\n  createSchedule(input: $input) {\\n    id\\n    objective\\n    customerId\\n    doctorId\\n    scheduledAt\\n    status\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"objective\": \"konsultasi 09:30\",\n      \"customerId\": \"6cacd9df-5095-4de1-a5f9-eb93fe5eafde\",\n      \"doctorId\": \"7f529b69-b141-44e1-bead-f48f44d176ee\",\n      \"scheduledAt\": \"2026-06-01T09:30:00.000Z\",\n      \"status\": \"PENDING\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}",
+              "host": [
+                "{{schedule_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "01 - Create Schedule (error duplicate)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"mutation CreateSchedule($input: CreateScheduleInput!) {\\n  createSchedule(input: $input) {\\n    id\\n    objective\\n    customerId\\n    doctorId\\n    scheduledAt\\n    status\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"objective\": \"General consultation\",\n      \"customerId\": \"f30549c2-290c-46a9-9584-56b76e2989c7\",\n      \"doctorId\": \"7f529b69-b141-44e1-bead-f48f44d176ee\",\n      \"scheduledAt\": \"2026-06-01T09:00:00.000Z\",\n      \"status\": \"PENDING\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "732"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"2dc-+5FGYwSp54Wdt3jOWt6XHnERCNo\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 02:50:46 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"errors\": [\n        {\n            \"message\": \"Doctor already has a schedule at the selected time\",\n            \"locations\": [\n                {\n                    \"line\": 2,\n                    \"column\": 3\n                }\n            ],\n            \"path\": [\n                \"createSchedule\"\n            ],\n            \"extensions\": {\n                \"code\": \"INTERNAL_SERVER_ERROR\",\n                \"stacktrace\": [\n                    \"ConflictException: Doctor already has a schedule at the selected time\",\n                    \"    at ScheduleCreatorService.createSchedule (/app/dist/modules/schedule/services/schedule-creator.service.js:35:19)\",\n                    \"    at async target (/app/node_modules/@nestjs/core/helpers/external-context-creator.js:74:28)\",\n                    \"    at async Object.createSchedule (/app/node_modules/@nestjs/core/helpers/external-proxy.js:9:24)\"\n                ],\n                \"status\": 409,\n                \"originalError\": {\n                    \"message\": \"Doctor already has a schedule at the selected time\",\n                    \"error\": \"Conflict\",\n                    \"statusCode\": 409\n                }\n            }\n        }\n    ],\n    \"data\": null\n}"
+            },
+            {
+              "name": "01 - Create Schedule",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"mutation CreateSchedule($input: CreateScheduleInput!) {\\n  createSchedule(input: $input) {\\n    id\\n    objective\\n    customerId\\n    doctorId\\n    scheduledAt\\n    status\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"objective\": \"konsultasi 09:00\",\n      \"customerId\": \"f30549c2-290c-46a9-9584-56b76e2989c7\",\n      \"doctorId\": \"7f529b69-b141-44e1-bead-f48f44d176ee\",\n      \"scheduledAt\": \"2026-06-01T09:00:00.000Z\",\n      \"status\": \"PENDING\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "345"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"159-6RnRZGUDzweW4iMGhHFudj4IYkE\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 03:19:52 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"createSchedule\": {\n            \"id\": \"e952332e-1396-4f23-8302-3af9f38edf89\",\n            \"objective\": \"konsultasi 09:00\",\n            \"customerId\": \"f30549c2-290c-46a9-9584-56b76e2989c7\",\n            \"doctorId\": \"7f529b69-b141-44e1-bead-f48f44d176ee\",\n            \"scheduledAt\": \"2026-06-01T09:00:00.000Z\",\n            \"status\": \"PENDING\",\n            \"createdAt\": \"2026-05-24T03:19:52.627Z\",\n            \"updatedAt\": \"2026-05-24T03:19:52.627Z\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "02 - List Schedules (filter + pagination)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"List schedules returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"List schedules has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query Schedules($input: ScheduleQueryInput) {\\n  schedules(input: $input) {\\n    items {\\n      id\\n      objective\\n      customerId\\n      doctorId\\n      scheduledAt\\n      status\\n      createdAt\\n      updatedAt\\n    }\\n    total\\n    skip\\n    take\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n    //   \"doctorId\": \"79d71e05-af16-4b69-8650-e470ec914bd5\",\n    //   \"customerId\": \"974be59d-01bd-4e70-aefe-b0a2fb7d8f73\",\n      \"skip\": 0,\n      \"take\": 10\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}",
+              "host": [
+                "{{schedule_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "02 - List Schedules (filter + pagination)",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"query Schedules($input: ScheduleQueryInput) {\\n  schedules(input: $input) {\\n    items {\\n      id\\n      objective\\n      customerId\\n      doctorId\\n      scheduledAt\\n      status\\n      createdAt\\n      updatedAt\\n    }\\n    total\\n    skip\\n    take\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n    //   \"doctorId\": \"79d71e05-af16-4b69-8650-e470ec914bd5\",\n    //   \"customerId\": \"974be59d-01bd-4e70-aefe-b0a2fb7d8f73\",\n      \"skip\": 0,\n      \"take\": 10\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "702"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"2be-YsXsWPkEWtg/4Aq6u+zHVcZkiH4\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 03:12:11 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"schedules\": {\n            \"items\": [\n                {\n                    \"id\": \"cff67eba-fd3f-48ac-b2be-45e267c0e736\",\n                    \"objective\": \"Konsultasi 09:15\",\n                    \"customerId\": \"79d71e05-af16-4b69-8650-e470ec914bd5\",\n                    \"doctorId\": \"974be59d-01bd-4e70-aefe-b0a2fb7d8f73\",\n                    \"scheduledAt\": \"2026-06-01T09:15:00.000Z\",\n                    \"status\": \"PENDING\",\n                    \"createdAt\": \"2026-05-24T03:02:14.427Z\",\n                    \"updatedAt\": \"2026-05-24T03:02:14.427Z\"\n                },\n                {\n                    \"id\": \"1ef77e8b-7929-4f95-a5db-5ae61874f0b9\",\n                    \"objective\": \"General consultation\",\n                    \"customerId\": \"f30549c2-290c-46a9-9584-56b76e2989c7\",\n                    \"doctorId\": \"7f529b69-b141-44e1-bead-f48f44d176ee\",\n                    \"scheduledAt\": \"2026-06-01T09:00:00.000Z\",\n                    \"status\": \"PENDING\",\n                    \"createdAt\": \"2026-05-24T02:50:42.959Z\",\n                    \"updatedAt\": \"2026-05-24T02:50:42.959Z\"\n                }\n            ],\n            \"total\": 2,\n            \"skip\": 0,\n            \"take\": 10\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "03 - Get Schedule by ID",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Get schedule returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Get schedule has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"query Schedule($input: ScheduleIdInput!) {\\n  schedule(input: $input) {\\n    id\\n    objective\\n    customerId\\n    doctorId\\n    scheduledAt\\n    status\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"cff67eba-fd3f-48ac-b2be-45e267c0e736\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}",
+              "host": [
+                "{{schedule_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "03 - Get Schedule by ID",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"query Schedule($input: ScheduleIdInput!) {\\n  schedule(input: $input) {\\n    id\\n    objective\\n    customerId\\n    doctorId\\n    scheduledAt\\n    status\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"cff67eba-fd3f-48ac-b2be-45e267c0e736\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "339"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"153-55W9ct++ESgLXGaKUJI7ipC3EWU\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 03:12:39 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"schedule\": {\n            \"id\": \"cff67eba-fd3f-48ac-b2be-45e267c0e736\",\n            \"objective\": \"Konsultasi 09:15\",\n            \"customerId\": \"79d71e05-af16-4b69-8650-e470ec914bd5\",\n            \"doctorId\": \"974be59d-01bd-4e70-aefe-b0a2fb7d8f73\",\n            \"scheduledAt\": \"2026-06-01T09:15:00.000Z\",\n            \"status\": \"PENDING\",\n            \"createdAt\": \"2026-05-24T03:02:14.427Z\",\n            \"updatedAt\": \"2026-05-24T03:02:14.427Z\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "04 - Delete Schedule",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Delete schedule returns 200\", function () { pm.response.to.have.status(200); });",
+                  "const json = pm.response.json();",
+                  "pm.test(\"Delete schedule has no GraphQL errors\", function () { pm.expect(json.errors, JSON.stringify(json.errors)).to.be.undefined; });"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\": \"mutation DeleteSchedule($input: ScheduleIdInput!) {\\n  deleteSchedule(input: $input) {\\n    id\\n    objective\\n    customerId\\n    doctorId\\n    scheduledAt\\n    status\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"135b0d08-a814-4692-bd19-c6032848d9d5\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}",
+              "host": [
+                "{{schedule_base_url}}"
+              ]
+            }
+          },
+          "response": [
+            {
+              "name": "04 - Delete Schedule",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json",
+                    "type": "text"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\": \"mutation DeleteSchedule($input: ScheduleIdInput!) {\\n  deleteSchedule(input: $input) {\\n    id\\n    objective\\n    customerId\\n    doctorId\\n    scheduledAt\\n    status\\n    createdAt\\n    updatedAt\\n  }\\n}\",\n  \"variables\": {\n    \"input\": {\n      \"id\": \"cff67eba-fd3f-48ac-b2be-45e267c0e736\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "345"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"159-yotBTnIv4ymAAob/zUa8LFAY6HY\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 03:16:54 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"deleteSchedule\": {\n            \"id\": \"cff67eba-fd3f-48ac-b2be-45e267c0e736\",\n            \"objective\": \"Konsultasi 09:15\",\n            \"customerId\": \"79d71e05-af16-4b69-8650-e470ec914bd5\",\n            \"doctorId\": \"974be59d-01bd-4e70-aefe-b0a2fb7d8f73\",\n            \"scheduledAt\": \"2026-06-01T09:15:00.000Z\",\n            \"status\": \"PENDING\",\n            \"createdAt\": \"2026-05-24T03:02:14.427Z\",\n            \"updatedAt\": \"2026-05-24T03:02:14.427Z\"\n        }\n    }\n}"
+            }
+          ]
+        },
+        {
+          "name": "05 - Update Schedule",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{access_token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"query\":\"mutation UpdateScheduleStatus($input: UpdateScheduleStatusInput!) { updateScheduleStatus(input: $input) { id status updatedAt } }\",\n  \"variables\":{\n    \"input\":{\n      \"id\":\"1ef77e8b-7929-4f95-a5db-5ae61874f0b9\",\n      \"status\":\"COMPLETED\"\n    }\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{schedule_base_url}}/graphql",
+              "host": [
+                "{{schedule_base_url}}"
+              ],
+              "path": [
+                "graphql"
+              ]
+            },
+            "description": "Generated from cURL: curl --location 'http://localhost:3002/graphql' \\\n--header 'Content-Type: application/json' \\\n--header 'Authorization: Bearer <ACCESS_TOKEN>' \\\n--data '{\n  \"query\":\"mutation UpdateScheduleStatus($input: UpdateScheduleStatusInput!) { updateScheduleStatus(input: $input) { id status updatedAt } }\",\n  \"variables\":{\n    \"input\":{\n      \"id\":\"<SCHEDULE_UUID>\",\n      \"status\":\"COMPLETED\"\n    }\n  }\n}'"
+          },
+          "response": [
+            {
+              "name": "05 - Update Schedule",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  },
+                  {
+                    "key": "Authorization",
+                    "value": "Bearer {{access_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"query\":\"mutation UpdateScheduleStatus($input: UpdateScheduleStatusInput!) { updateScheduleStatus(input: $input) { id status updatedAt } }\",\n  \"variables\":{\n    \"input\":{\n      \"id\":\"1ef77e8b-7929-4f95-a5db-5ae61874f0b9\",\n      \"status\":\"COMPLETED\"\n    }\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{schedule_base_url}}/graphql",
+                  "host": [
+                    "{{schedule_base_url}}"
+                  ],
+                  "path": [
+                    "graphql"
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": null,
+              "header": [
+                {
+                  "key": "X-Powered-By",
+                  "value": "Express"
+                },
+                {
+                  "key": "cache-control",
+                  "value": "no-store"
+                },
+                {
+                  "key": "Content-Type",
+                  "value": "application/json; charset=utf-8"
+                },
+                {
+                  "key": "Content-Length",
+                  "value": "140"
+                },
+                {
+                  "key": "ETag",
+                  "value": "W/\"8c-ROUHXZpsggjYucj0cUmDCga+i9s\""
+                },
+                {
+                  "key": "Date",
+                  "value": "Sun, 24 May 2026 03:18:32 GMT"
+                },
+                {
+                  "key": "Connection",
+                  "value": "keep-alive"
+                },
+                {
+                  "key": "Keep-Alive",
+                  "value": "timeout=5"
+                }
+              ],
+              "cookie": [],
+              "body": "{\n    \"data\": {\n        \"updateScheduleStatus\": {\n            \"id\": \"1ef77e8b-7929-4f95-a5db-5ae61874f0b9\",\n            \"status\": \"COMPLETED\",\n            \"updatedAt\": \"2026-05-24T03:18:32.862Z\"\n        }\n    }\n}"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "auth_base_url",
+      "value": "http://localhost:3001/graphql"
+    },
+    {
+      "key": "schedule_base_url",
+      "value": "http://localhost:3002/graphql"
+    },
+    {
+      "key": "access_token",
+      "value": ""
+    },
+    {
+      "key": "customer_id",
+      "value": ""
+    },
+    {
+      "key": "doctor_id",
+      "value": ""
+    },
+    {
+      "key": "schedule_id",
+      "value": ""
+    }
+  ]
+}

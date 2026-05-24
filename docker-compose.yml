@@ -1,0 +1,112 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: healthcare-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - '${POSTGRES_PORT}:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - healthcare-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: unless-stopped
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    command: >
+      sh -c "if [ -n \"$$REDIS_PASSWORD\" ];
+      then redis-server --requirepass \"$$REDIS_PASSWORD\";
+      else redis-server;
+      fi"
+    ports:
+      - '${REDIS_PORT}:6379'
+    healthcheck:
+      test: ['CMD-SHELL', 'if [ -n "$$REDIS_PASSWORD" ]; then redis-cli -a "$$REDIS_PASSWORD" ping; else redis-cli ping; fi']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - healthcare-network
+
+  auth-service:
+    build:
+      context: ./auth-service
+      dockerfile: Dockerfile
+    container_name: auth-service
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      AUTH_SERVICE_PORT: ${AUTH_SERVICE_PORT}
+      DATABASE_URL: ${AUTH_DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+      GRAPHQL_PLAYGROUND: ${AUTH_GRAPHQL_PLAYGROUND}
+    command: >
+      sh -c "npx prisma generate --schema prisma/schema.prisma
+      && npx prisma db push --schema prisma/schema.prisma
+      && npm run start"
+    ports:
+      - '${AUTH_SERVICE_PORT}:3001'
+    networks:
+      - healthcare-network
+
+  schedule-service:
+    build:
+      context: ./schedule-service
+      dockerfile: Dockerfile
+    container_name: schedule-service
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      auth-service:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      SCHEDULE_SERVICE_PORT: ${SCHEDULE_SERVICE_PORT}
+      DATABASE_URL: ${SCHEDULE_DATABASE_URL}
+      AUTH_SERVICE_GRAPHQL_URL: ${AUTH_SERVICE_GRAPHQL_URL}
+      AUTH_SERVICE_TIMEOUT_MS: ${AUTH_SERVICE_TIMEOUT_MS}
+      GRAPHQL_PLAYGROUND: ${SCHEDULE_GRAPHQL_PLAYGROUND}
+      REDIS_HOST: ${REDIS_HOST}
+      REDIS_PORT: ${REDIS_PORT}
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      CACHE_ENABLED: ${CACHE_ENABLED}
+      CACHE_TTL_SECONDS: ${CACHE_TTL_SECONDS}
+      EMAIL_FROM: ${EMAIL_FROM}
+      SMTP_HOST: ${SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT}
+      SMTP_USER: ${SMTP_USER}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+    command: >
+      sh -c "npx prisma generate --schema prisma/schema.prisma
+      && npx prisma db push --schema prisma/schema.prisma
+      && npm run start"
+    ports:
+      - '${SCHEDULE_SERVICE_PORT}:3002'
+    networks:
+      - healthcare-network
+
+volumes:
+  postgres_data:
+
+networks:
+  healthcare-network:
+    driver: bridge

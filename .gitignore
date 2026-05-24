@@ -1,0 +1,9 @@
+node_modules
+dist
+.env
+*.log
+coverage
+auth-service/node_modules
+auth-service/dist
+schedule-service/node_modules
+schedule-service/dist

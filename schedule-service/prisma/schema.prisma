@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ScheduleStatus {
+  PENDING
+  COMPLETED
+  CANCELED
+}
+
+model Customer {
+  id        String     @id @default(uuid()) @db.Uuid
+  name      String
+  email     String     @unique
+  schedules Schedule[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Doctor {
+  id        String     @id @default(uuid()) @db.Uuid
+  name      String
+  schedules Schedule[]
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+model Schedule {
+  id          String         @id @default(uuid()) @db.Uuid
+  objective   String
+  customerId  String         @db.Uuid
+  doctorId    String         @db.Uuid
+  scheduledAt DateTime
+  status      ScheduleStatus @default(PENDING)
+  customer    Customer       @relation(fields: [customerId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  doctor      Doctor         @relation(fields: [doctorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@unique([doctorId, scheduledAt], map: "schedule_doctor_scheduled_at_unique")
+  @@index([customerId], map: "schedule_customer_id_idx")
+  @@index([doctorId], map: "schedule_doctor_id_idx")
+  @@index([scheduledAt], map: "schedule_scheduled_at_idx")
+  @@index([status], map: "schedule_status_idx")
+}
