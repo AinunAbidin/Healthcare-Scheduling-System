@@ -35,35 +35,35 @@ flowchart LR
     Client[Client / Postman / Playground]
 
     subgraph AuthService[Auth Service :3001]
-      AuthGraphQL[/graphql]
+      AuthGraphQL["GraphQL /graphql"]
       AuthResolver[Auth Resolver]
-      AuthPrisma[(PostgreSQL schema: auth)]
+      AuthDB[(PostgreSQL auth schema)]
     end
 
     subgraph ScheduleService[Schedule Service :3002]
-      ScheduleGraphQL[/graphql]
-      AuthGuard[AuthGuard]
+      ScheduleGraphQL["GraphQL /graphql"]
+      AuthGuard[Auth Guard]
       ScheduleResolvers[Customer / Doctor / Schedule Resolvers]
-      SchedulePrisma[(PostgreSQL schema: schedule)]
+      ScheduleDB[(PostgreSQL schedule schema)]
       Redis[(Redis)]
-      Worker[Email Notification Processor]
-      SMTP[(SMTP)]
-      Test[Jest Unit Test]
+      EmailWorker[Email Notification Worker]
+      SMTP[SMTP Server]
     end
 
     Client --> AuthGraphQL
     Client --> ScheduleGraphQL
 
-    ScheduleGraphQL --> AuthGuard
-    AuthGuard -->|validateToken token| AuthGraphQL
-    ScheduleGraphQL --> ScheduleResolvers
+    AuthGraphQL --> AuthResolver
+    AuthResolver --> AuthDB
 
-    AuthResolver --> AuthPrisma
-    ScheduleResolvers --> SchedulePrisma
-    ScheduleResolvers --> Redis
-    Worker --> Redis
-    Worker --> SMTP
-    Test -.mock.-> ScheduleResolvers
+    ScheduleGraphQL --> AuthGuard
+    AuthGuard -->|Validate JWT token| AuthGraphQL
+    AuthGuard --> ScheduleResolvers
+
+    ScheduleResolvers --> ScheduleDB
+    ScheduleResolvers -->|Read cache / queue job| Redis
+    Redis -->|Email job| EmailWorker
+    EmailWorker --> SMTP
 ```
 
 ---
